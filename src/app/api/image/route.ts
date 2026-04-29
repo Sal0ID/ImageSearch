@@ -8,6 +8,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing key parameter" }, { status: 400 });
   }
 
+  if (key.includes("..") || key.includes("/") || key.includes("\\")) {
+    return NextResponse.json({ error: "Invalid key" }, { status: 400 });
+  }
+
   try {
     const stream = await getImageStream(key);
     const chunks: Buffer[] = [];

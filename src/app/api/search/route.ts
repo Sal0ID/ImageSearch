@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { embedQuery } from "@/lib/embedding";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "anonymous";
+
+  if (!rateLimit(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429 }
+    );
+  }
   let query: string;
   try {
     const body = await request.json();
@@ -23,7 +35,7 @@ export async function POST(request: NextRequest) {
   try {
     const embedding = await embedQuery(query.trim());
 
-    const { data, error } = await supabase.rpc("search_images", {
+    const { data, error } = await getSupabase().rpc("search_images", {
       query_embedding: embedding,
       match_count: 8,
     });

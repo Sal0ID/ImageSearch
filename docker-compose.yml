@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    ports:
+      - "7180:7180"
+    env_file:
+      - .env.local
+    restart: unless-stopped

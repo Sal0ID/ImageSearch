@@ -53,6 +53,28 @@ export default function Home() {
     }
   }, []);
 
+  const searchByImage = useCallback(async (file: File) => {
+    startTransition(() => {
+      setLoading(true);
+      setError(false);
+    });
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch("/api/search/image", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("API error");
+      const data: ImageData = await res.json();
+      startTransition(() => setImages(data.images));
+    } catch {
+      startTransition(() => setError(true));
+    } finally {
+      startTransition(() => setLoading(false));
+    }
+  }, []);
+
   const initialized = useRef(false);
   useEffect(() => {
     if (!initialized.current) {
@@ -73,7 +95,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <Header onSearch={searchImages} isLoading={loading} />
+      <Header
+        onSearch={searchImages}
+        onImageSearch={searchByImage}
+        isLoading={loading}
+      />
 
       <main className="flex-1 flex flex-col sm:justify-center pt-20 pb-8">
         {error ? (

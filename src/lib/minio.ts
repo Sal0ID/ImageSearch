@@ -1,19 +1,23 @@
 import { Client } from "minio";
 
-const endpoint = process.env.MINIO_ENDPOINT!;
-const port = parseInt(process.env.MINIO_PORT!, 10);
-const accessKey = process.env.MINIO_ACCESS_KEY!;
-const secretKey = process.env.MINIO_SECRET_KEY!;
-const bucket = process.env.MINIO_BUCKET!;
+let client: Client | null = null;
 
-export const minioClient = new Client({
-  endPoint: endpoint,
-  port,
-  useSSL: false,
-  accessKey,
-  secretKey,
-});
+function getMinioClient(): Client {
+  if (!client) {
+    client = new Client({
+      endPoint: process.env.MINIO_ENDPOINT!,
+      port: parseInt(process.env.MINIO_PORT!, 10),
+      useSSL: false,
+      accessKey: process.env.MINIO_ACCESS_KEY!,
+      secretKey: process.env.MINIO_SECRET_KEY!,
+    });
+  }
+  return client;
+}
 
 export async function getImageStream(objectKey: string) {
-  return minioClient.getObject(bucket, objectKey);
+  return getMinioClient().getObject(
+    process.env.MINIO_BUCKET!,
+    objectKey
+  );
 }
