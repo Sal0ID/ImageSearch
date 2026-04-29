@@ -6,3 +6,17 @@ services:
     env_file:
       - .env.local
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=300
+      - REPO_USER=${GITHUB_REPOSITORY_OWNER:-user}
+      - REPO_PASS=${GHCR_PAT}
+    command: --interval 300 web
+    restart: unless-stopped
