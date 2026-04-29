@@ -13,12 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      IMAGE_NAME: ${{ github.repository_owner }}/imagesearch
     permissions:
       contents: read
       packages: write
 
     steps:
+      - name: Set image name
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=${REPO_LOWER}/imagesearch" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v4
 
