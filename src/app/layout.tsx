@@ -27,12 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white">
-        {children}
-        <footer className="text-center py-3 text-xs text-gray-300">
-          v1.0.1
-        </footer>
-      </body>
+      <body className="min-h-full flex flex-col bg-white">{children}</body>
     </html>
   );
 }
