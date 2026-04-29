@@ -30,7 +30,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white">
         {children}
         <footer className="text-center py-3 text-xs text-gray-300">
-          v1.0.0
+          v1.0.1
         </footer>
       </body>
     </html>
