@@ -1,6 +1,6 @@
 services:
   web:
-    image: ghcr.io/${GITHUB_REPOSITORY:-user/repo}:latest
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-user}/imagesearch:latest
     ports:
       - "7180:7180"
     env_file:
